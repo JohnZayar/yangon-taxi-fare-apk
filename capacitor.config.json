@@ -1,0 +1,12 @@
+{
+  "appId": "com.johnzayar.yangontaxifare",
+  "appName": "Yangon Taxi Fare",
+  "webDir": "www",
+  "bundledWebRuntime": false,
+  "android": {
+    "allowMixedContent": false
+  },
+  "server": {
+    "androidScheme": "https"
+  }
+}
