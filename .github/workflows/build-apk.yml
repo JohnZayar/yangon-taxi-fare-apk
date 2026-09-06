@@ -28,6 +28,24 @@ jobs:
       - name: Copy web assets into the Android project
         run: npx cap sync android
 
+      - name: Add Location permissions to AndroidManifest.xml
+        run: |
+          node -e "
+          const fs = require('fs');
+          const path = 'android/app/src/main/AndroidManifest.xml';
+          let xml = fs.readFileSync(path, 'utf8');
+          const perms = '    <uses-permission android:name=\"android.permission.ACCESS_FINE_LOCATION\" />\n    <uses-permission android:name=\"android.permission.ACCESS_COARSE_LOCATION\" />\n';
+          if (!xml.includes('ACCESS_FINE_LOCATION')) {
+            xml = xml.replace(/(<manifest[^>]*>)/, '\$1\n' + perms);
+            fs.writeFileSync(path, xml);
+            console.log('Location permissions injected into AndroidManifest.xml');
+          } else {
+            console.log('Location permissions already present, skipping');
+          }
+          "
+      - name: Show final AndroidManifest.xml (for verification in the build log)
+        run: cat android/app/src/main/AndroidManifest.xml
+
       - name: Set up Java (required by Android Gradle Plugin)
         uses: actions/setup-java@v4
         with:
